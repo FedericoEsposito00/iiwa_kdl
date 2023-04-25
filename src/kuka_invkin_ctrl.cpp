@@ -4,6 +4,7 @@
 #include "sensor_msgs/JointState.h"
 #include <std_msgs/Float64.h>
 #include <fstream>
+#include <ros/package.h>
 
 //Include KDL libraries
 #include <kdl_parser/kdl_parser.hpp>
@@ -258,7 +259,8 @@ void KUKA_INVKIN::ctrl_loop() {
 
 	ifstream ref;
 
-	ref.open("Path_ref.txt", ios::in); //Change the file path
+	string pkg_loc = ros::package::getPath("iiwa_kdl");
+	ref.open(pkg_loc + "/Path_ref.txt", ios::in); 
 
 	if (!ref.is_open()) {
 		cout<<"Error opening the file!";
@@ -293,9 +295,10 @@ void KUKA_INVKIN::ctrl_loop() {
 		F_dest.p.data[2] = P_z[j];
 
 		//The orientation set point is the same of the current one
-		for(int i=0; i<9; i++ )
-			F_dest.M.data[i] = _p_out.M.data[i];
-
+		KDL::Frame ident = KDL::Frame::Identity();
+		for(int i=0; i<9; i++ ){
+			F_dest.M.data[i] = ident.M.data[i];
+		}
 	
 		std_msgs::Float64 cmd[7];
 

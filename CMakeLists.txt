@@ -12,6 +12,7 @@ find_package(catkin REQUIRED COMPONENTS
   kdl_parser
   roscpp
   sensor_msgs
+  roslib
 )
 
 ## System dependencies are found with CMake's conventions
